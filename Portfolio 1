@@ -1,0 +1,97 @@
+SELECT
+  *
+FROM
+  `portfolio-project-368920.covid_vaccinations.vaccinations`
+ORDER BY
+  3,4 
+  --SELECT data that we are going to be using
+SELECT
+  location,
+  date,
+  total_cases,
+  total_deaths,
+  (total_deaths/total_cases)*100 AS DeathPercentage
+FROM
+  `portfolio-project-368920.covid_deaths.death`
+WHERE
+  location = 'United States'
+ORDER BY
+  1,
+  2 
+  -- Looking AT Total Cases vs Total Deaths 
+  -- Shows liklihood OF dying
+IF
+  you contract covid IN your country
+SELECT
+  location,
+  population,
+  MAX(total_cases) AS HighestInfectionCount,
+  MAX((total_cases/population))*100 AS PercentPopulationInfected
+FROM
+  `portfolio-project-368920.covid_deaths.death`
+GROUP BY
+  location,
+  population
+ORDER BY
+  PercentPopulationInfected DESC --Looking AT countries
+WITH
+  Highest Infection Rate compared TO Population
+SELECT
+  continent,
+  MAX(total_deaths) AS TotalDeathCount
+FROM
+  `portfolio-project-368920.covid_deaths.death`
+WHERE
+  continent IS NOT NULL
+GROUP BY
+  continent
+ORDER BY
+  TotalDeathCount DESC --LET'S
+BREAK
+  THIS DOWN BY CONTINENT
+SELECT
+  location,
+  MAX(total_deaths) AS TotalDeathCount
+FROM
+  `portfolio-project-368920.covid_deaths.death`
+WHERE
+  continent IS NOT NULL
+GROUP BY
+  location
+ORDER BY
+  TotalDeathCount DESC --Countries
+WITH
+  the Highest Death Count per Population
+SELECT
+  date,
+  SUM(new_cases) AS total_cases,
+  SUM(new_deaths) AS total_deaths,
+  SUM(new_deaths)/SUM(total_cases)*100 AS DeathPercentage
+FROM
+  `portfolio-project-368920.covid_deaths.death`
+WHERE
+  continent IS NOT NULL
+GROUP BY
+  date
+ORDER BY
+  1,
+  2 --Global Numbers -- Looking AT Total Population vs Vaccinations
+SELECT
+  dea.continent,
+  dea.location,
+  dea.date,
+  dea.population,
+  vac.new_vaccinations
+FROM
+  `portfolio-project-368920.covid_vaccinations.vaccinations` vac
+JOIN
+  `portfolio-project-368920.covid_deaths.death` dea
+ON
+  vac.location = dea.location
+  AND vac.date = dea.date
+WHERE
+  dea.continent IS NOT NULL
+ORDER BY
+  1,
+  2,
+  3
